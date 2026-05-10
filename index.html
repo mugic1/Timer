@@ -56,7 +56,18 @@
   function startSnow() { if(snowActive) return; snowActive=true; resizeCanvas(); initSnow(); if(animFrame) cancelAnimationFrame(animFrame); animateSnow(); }
   function stopSnow() { if(!snowActive) return; snowActive=false; if(animFrame) cancelAnimationFrame(animFrame); animFrame=null; if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height); snowflakes=[]; }
   function resetToInitial() { stopInt(); timerState='stopped'; elapsedSeconds=0; updateDisplay(); if(snowActive) stopSnow(); pauseBtn.classList.add('hidden'); resetBtn.classList.add('hidden'); centralStart.classList.remove('hidden'); }
-  function startTimerAndSnow() { if(timerState==='stopped') { stopInt(); startInt(); timerState='running'; if(!snowActive) startSnow(); centralStart.classList.add('hidden'); pauseBtn.classList.remove('hidden'); resetBtn.classList.add('hidden'); } else if(timerState==='paused') { startInt(); timerState='running'; if(!snowActive) startSnow(); } }
+  function startTimerAndSnow() {
+  // ✨ REQUEST FULLSCREEN (hides status & navigation bars)
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  }
+
+  if(timerState==='stopped') {
+    stopInt(); startInt(); timerState='running'; if(!snowActive) startSnow();
+    centralStart.classList.add('hidden'); pauseBtn.classList.remove('hidden'); resetBtn.classList.add('hidden');
+  }
+  else if(timerState==='paused') { startInt(); timerState='running'; if(!snowActive) startSnow(); }
+  }
   function pauseAction() { if(timerState==='running') { stopInt(); timerState='paused'; resetBtn.classList.remove('hidden'); } else if(timerState==='paused') { startInt(); timerState='running'; if(!snowActive) startSnow(); } }
   function resetAction() { stopInt(); timerState='stopped'; elapsedSeconds=0; updateDisplay(); if(snowActive) stopSnow(); pauseBtn.classList.add('hidden'); resetBtn.classList.add('hidden'); centralStart.classList.remove('hidden'); }
   centralStart.addEventListener('click', startTimerAndSnow);
